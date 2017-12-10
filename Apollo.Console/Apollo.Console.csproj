@@ -10,7 +10,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3"/>
     <PackageReference Include="Google.Protobuf" Version="3.5.0"/>
     <PackageReference Include="Consul" Version="0.7.2.3"/>
-    <ProjectReference Include="..\Appolo\Appolo.csproj">
+    <ProjectReference Include="..\Apollo\Apollo.csproj">
       <Name>Appolo</Name>
     </ProjectReference>
   </ItemGroup>

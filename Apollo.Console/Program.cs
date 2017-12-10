@@ -1,4 +1,5 @@
 ﻿using System;
+using Apollo;
 
 namespace Apollo.Console
 {
@@ -6,7 +7,10 @@ namespace Apollo.Console
     {
         static void Main(string[] args)
         {
-            System.Console.WriteLine("Hello World!");
+            MicroServiceManage.Run();
+
+            var restul =  MicroServiceFactory<IServerDemo>.Instance.Hello("12");
+            System.Console.WriteLine(restul);
         }
     }
 }
