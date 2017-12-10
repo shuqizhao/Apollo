@@ -1,0 +1,8 @@
+*.dll
+*.pdb
+*.suo
+packages/
+bin/
+obj/
+.vs/
+*.DS_Store
