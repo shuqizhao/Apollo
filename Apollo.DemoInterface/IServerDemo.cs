@@ -8,7 +8,7 @@ namespace Apollo.DemoInterface
     {
         string Hello(string input);
 
-        string Hello1();
+        string Hello();
 
         Person GetPersonById(int id, bool isAdmin);
 

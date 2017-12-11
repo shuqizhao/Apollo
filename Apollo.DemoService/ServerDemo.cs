@@ -25,7 +25,7 @@ namespace Apollo.DemoService
 
         }
 
-        public string Hello1()
+        public string Hello()
         {
             return "Hello Word";
         }

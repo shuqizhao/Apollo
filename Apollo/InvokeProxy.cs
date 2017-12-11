@@ -22,7 +22,14 @@ namespace Apollo
                 System.Console.WriteLine(service.Address + ":" + service.Port);
                 var client = new ApolloService.ApolloServiceClient(channel);
                 var request = new Request();
-                request.ServiceName = type.FullName + "$" + targetMethod.Name;
+
+                var key = type.FullName + "_" + targetMethod.Name;
+                foreach (var parameter in targetMethod.GetParameters())
+                {
+                    key += "-" + parameter.ParameterType.FullName;
+                }
+
+                request.ServiceName = type.FullName + "$" + key;
                 var jsonInput = "";
                 foreach (var arg in args)
                 {

@@ -17,7 +17,7 @@ namespace Apollo
                 var typeName = splits[0];
                 var methodName = splits[1];
                 var type = MicroServiceManage.GetServiceType(typeName);
-                var methodType = type.GetMethod(methodName);
+                var methodType = MicroServiceManage.GetMethodType(methodName);
                 var parameters = methodType.GetParameters();
                 var values = request.Data.Split('兲');
                 var args = new List<object>();

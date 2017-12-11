@@ -24,7 +24,7 @@ namespace Apollo.Console
             throw new NotImplementedException();
         }
 
-        public string Hello1()
+        public string Hello()
         {
             return "Hello Word";
         }

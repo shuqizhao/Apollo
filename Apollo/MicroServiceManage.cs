@@ -26,6 +26,26 @@ namespace Apollo
         }
 
         private static Dictionary<string, Type> ServiceTypes = new Dictionary<string, Type>();
+        private static Dictionary<string, MethodInfo> MethodTypes = new Dictionary<string, MethodInfo>();
+
+        public static void AddMethodTypes(Type type)
+        {
+            var methods = type.GetMethods();
+            foreach (var method in methods)
+            {
+                var key = type.FullName + "_" + method.Name;
+                foreach (var parameter in method.GetParameters())
+                {
+                    key += "-" + parameter.ParameterType.FullName;
+                }
+                MethodTypes.Add(key, method);
+            }
+        }
+
+        public static MethodInfo GetMethodType(string key)
+        {
+            return MethodTypes[key];
+        }
 
         public static void AddServiceType(string key, Type type)
         {
@@ -51,6 +71,7 @@ namespace Apollo
                     {
                         BuildService(ifItem.FullName, (MicroServiceAttribute)microServiceAttribute);
                         AddServiceType(ifItem.FullName, type);
+                        AddMethodTypes(ifItem);
                     }
                 }
             }
@@ -125,8 +146,8 @@ namespace Apollo
 
             var consulRegist = new AgentServiceRegistration
             {
-                ID = name+Guid.NewGuid(),
-                Name = name ,
+                ID = name + Guid.NewGuid(),
+                Name = name,
                 Port = port,
                 Address = ip,
                 Check = new AgentServiceCheck
