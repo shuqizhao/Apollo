@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using Consul;
 
 namespace Apollo
 {
@@ -15,12 +16,13 @@ namespace Apollo
 
         static MicroServiceManage()
         {
-            SelfConstruction();
+
         }
-
-        public static void Run()
+        private static string _address = "";
+        public static void Run(string address = "")
         {
-
+            _address = address;
+            SelfConstruction();
         }
 
         private static Dictionary<string, Type> ServiceTypes = new Dictionary<string, Type>();
@@ -47,7 +49,7 @@ namespace Apollo
                     var microServiceAttribute = ifItem.GetCustomAttributes().First(x => x.GetType() == typeof(MicroServiceAttribute));
                     if (microServiceAttribute != null)
                     {
-                        BuildService((MicroServiceAttribute)microServiceAttribute);
+                        BuildService(ifItem.FullName, (MicroServiceAttribute)microServiceAttribute);
                         AddServiceType(ifItem.FullName, type);
                     }
                 }
@@ -87,7 +89,7 @@ namespace Apollo
                 try
                 {
                     Random ran = new Random();
-                    port = ran.Next(10000, 50000);
+                    port = ran.Next(2000, 4000);
 
                     string host = "127.0.0.1";
                     IPAddress ip = IPAddress.Parse(host);
@@ -110,7 +112,7 @@ namespace Apollo
             return port;
         }
 
-        private static void BuildService(MicroServiceAttribute microServiceAttribute)
+        private static void BuildService(string name, MicroServiceAttribute microServiceAttribute)
         {
             var port = GetPort();
             var ip = GetIpAddress();
@@ -120,6 +122,21 @@ namespace Apollo
                 Ports = { new ServerPort(ip, port, ServerCredentials.Insecure) }
             };
             server.Start();
+
+            var consulRegist = new AgentServiceRegistration
+            {
+                ID = name,
+                Name = name + "_" + Dns.GetHostName(),
+                Port = port,
+                Address = ip,
+                Check = new AgentServiceCheck
+                {
+                    TCP = GetIpAddress() + ":" + ConsulHelper.HealthPort,
+                    Interval=new TimeSpan(0,0,5),
+                    Timeout=new TimeSpan(0,0,5)
+                }
+            };
+            ConsulHelper.Registor(consulRegist);
         }
     }
 }
