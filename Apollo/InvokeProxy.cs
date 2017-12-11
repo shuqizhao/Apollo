@@ -19,7 +19,7 @@ namespace Apollo
             {
                 var service = ConsulHelper.GetServer(type.FullName);
                 var channel = new Channel(service.Address + ":" + service.Port, ChannelCredentials.Insecure);
-                System.Console.WriteLine(service.Address + ":" + service.Port);
+                //System.Console.WriteLine(service.Address + ":" + service.Port);
                 var client = new ApolloService.ApolloServiceClient(channel);
                 var request = new Request();
 

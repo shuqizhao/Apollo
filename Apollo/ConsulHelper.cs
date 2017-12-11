@@ -32,7 +32,7 @@ namespace Apollo
                     var send = sSocket.Accept();
                     //获取链接的IP地址
                     var sendIpoint = send.RemoteEndPoint.ToString();
-                    Console.WriteLine($"{sendIpoint}Connection");
+                    //Console.WriteLine($"{sendIpoint}Connection");
                 }
             });
             ConsulClientInstance = new ConsulClient();
