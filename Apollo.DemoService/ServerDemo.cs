@@ -1,7 +1,7 @@
 using System;
 using Apollo.DemoInterface;
 
-namespace Apollo.Console
+namespace Apollo.DemoService
 {
 
     public class ServerDemo : IServerDemo

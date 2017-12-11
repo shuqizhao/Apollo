@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using Apollo;
 
-namespace Apollo.Console
+namespace Apollo.DemoInterface
 {
-
-    [MicroService(Port=5001)]
+    [MicroService]
     public interface IServerDemo
     {
         string Hello(string input);
