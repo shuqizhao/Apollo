@@ -7,7 +7,8 @@ namespace Apollo.Console
     {
         public string Hello(string input)
         {
-            return "I get it";
+            System.Console.WriteLine("you input is "+input);
+            return "I get it，乱码？";
         }
     }
 }
