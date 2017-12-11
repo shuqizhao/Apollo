@@ -23,7 +23,11 @@ namespace Apollo
                 var client = new ApolloService.ApolloServiceClient(channel);
                 var request = new Request();
                 request.ServiceName = type.FullName + "$" + targetMethod.Name;
-                var jsonInput = JsonConvert.SerializeObject(args);
+                var jsonInput = "";
+                foreach (var arg in args)
+                {
+                    jsonInput += JsonConvert.SerializeObject(arg) + "兲";
+                }
                 request.Data = jsonInput;
                 var response = client.Call(request);
                 channel.ShutdownAsync().Wait();
