@@ -11,19 +11,20 @@ namespace Apollo
     public class ConsulHelper
     {
 
-        public static readonly int HealthPort = 5050;
+        public static readonly int HealthPort;
 
         static ConsulHelper()
         {
+            HealthPort = MicroServiceManage.GetPort();
             Task.Run(() =>
             {
-                string host = "127.0.0.1";
+                string host = MicroServiceManage.GetIpAddress();
                 IPAddress ip = IPAddress.Parse(host);
                 IPEndPoint ipe = new IPEndPoint(ip, HealthPort);
 
                 Socket sSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 sSocket.Bind(ipe);
-                sSocket.Listen(100);
+                sSocket.Listen(0);
 
                 while (true)
                 {
@@ -32,24 +33,6 @@ namespace Apollo
                     //获取链接的IP地址
                     var sendIpoint = send.RemoteEndPoint.ToString();
                     Console.WriteLine($"{sendIpoint}Connection");
-                    Task.Run(() =>
-                    {
-                        while (true)
-                        {
-                            //获取发送过来的消息容器
-                            byte[] buffer = new byte[1024 * 1024 * 2];
-                            var effective = send.Receive(buffer);
-                            //有效字节为0则跳过
-                            if (effective == 0)
-                            {
-                                break;
-                            }
-                            var str = Encoding.UTF8.GetString(buffer, 0, effective);
-                            Console.WriteLine(str);
-                            var buffers = Encoding.UTF8.GetBytes("Server Return Message");
-                            send.Send(buffers);
-                        }
-                    });
                 }
             });
             ConsulClientInstance = new ConsulClient();
@@ -59,19 +42,39 @@ namespace Apollo
         public static void Registor(AgentServiceRegistration agentService)
         {
             ConsulClientInstance.Agent.ServiceRegister(agentService);
-
         }
 
         public static AgentService GetServer(string id)
         {
-            var services = ConsulClientInstance.Agent.Services();
-
+            var services = ConsulClientInstance.Health.Service(id);
             services.Wait();
+            var serviceList = services.GetAwaiter().GetResult().Response;
 
-            var dic = services.GetAwaiter().GetResult().Response;
-            if (dic.ContainsKey(id))
+
+            var checks = ConsulClientInstance.Health.Checks(id);
+            checks.Wait();
+            var dicChecks = checks.GetAwaiter().GetResult().Response;
+
+            var healthChecks = dicChecks.Where(x => x.Status.Status == "passing").ToList();
+
+            var unHealthChecks = dicChecks.Where(x => x.Status.Status != "passing").ToList();
+            foreach (var unHealthCheck in unHealthChecks)
             {
-                return dic[id];
+                ConsulClientInstance.Catalog.Deregister(new CatalogDeregistration
+                {
+                    ServiceID = unHealthCheck.ServiceID,
+                    Node = unHealthCheck.Node
+                });
+            }
+
+            if (healthChecks.Any())
+            {
+                var length = healthChecks.Count;
+                var ran = new Random();
+                var index = ran.Next(0, length);
+                var check = healthChecks[index];
+                var serviceItem = serviceList.First(x => x.Service.ID == check.ServiceID);
+                return serviceItem.Service;
             }
             else
             {

@@ -15,18 +15,26 @@ namespace Apollo
 
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
-            var service = ConsulHelper.GetServer(type.FullName);
-            var channel = new Channel(service.Address + ":" + service.Port, ChannelCredentials.Insecure);
-            System.Console.WriteLine(service.Address + ":" + service.Port);
-            var client = new ApolloService.ApolloServiceClient(channel);
-            var request = new Request();
-            request.ServiceName = type.FullName + "$" + targetMethod.Name;
-            var jsonInput = JsonConvert.SerializeObject(args);
-            request.Data = jsonInput;
-            var response = client.Call(request);
-            channel.ShutdownAsync().Wait();
-            var result = JsonHelper.DeserializeJsonToObject(response.Data, targetMethod.ReturnType);
-            return result;
+            try
+            {
+                var service = ConsulHelper.GetServer(type.FullName);
+                var channel = new Channel(service.Address + ":" + service.Port, ChannelCredentials.Insecure);
+                System.Console.WriteLine(service.Address + ":" + service.Port);
+                var client = new ApolloService.ApolloServiceClient(channel);
+                var request = new Request();
+                request.ServiceName = type.FullName + "$" + targetMethod.Name;
+                var jsonInput = JsonConvert.SerializeObject(args);
+                request.Data = jsonInput;
+                var response = client.Call(request);
+                channel.ShutdownAsync().Wait();
+                var result = JsonHelper.DeserializeJsonToObject(response.Data, targetMethod.ReturnType);
+                return result;
+            }
+            catch (System.Exception ex)
+            {
+                System.Console.WriteLine(ex);
+            }
+            return null;
         }
     }
 }

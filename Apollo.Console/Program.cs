@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Apollo;
 
 namespace Apollo.Console
@@ -11,9 +12,12 @@ namespace Apollo.Console
 
             MicroServiceManage.Run();
 
-            //var restul =  MicroServiceFactory<IServerDemo>.Instance.Hello("12");
-            //System.Console.WriteLine(restul);
-            System.Console.Read();
+            while (true)
+            {
+                var restul = MicroServiceFactory<IServerDemo>.Instance.Hello("12");
+                System.Console.WriteLine(restul);
+                Thread.Sleep(1000);
+            }
         }
     }
 }

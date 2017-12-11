@@ -56,7 +56,7 @@ namespace Apollo
             }
         }
 
-        private static string GetIpAddress()
+        public static string GetIpAddress()
         {
             try
             {
@@ -74,13 +74,13 @@ namespace Apollo
                 }
                 return "";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "";
             }
         }
 
-        private static int GetPort()
+        public static int GetPort()
         {
             var port = 0;
             var end = false;
@@ -101,7 +101,7 @@ namespace Apollo
                     sSocket.Close();
                     end = false;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     end = true;
                 }
@@ -125,15 +125,15 @@ namespace Apollo
 
             var consulRegist = new AgentServiceRegistration
             {
-                ID = name,
-                Name = name + "_" + Dns.GetHostName(),
+                ID = name+Guid.NewGuid(),
+                Name = name ,
                 Port = port,
                 Address = ip,
                 Check = new AgentServiceCheck
                 {
                     TCP = GetIpAddress() + ":" + ConsulHelper.HealthPort,
-                    Interval=new TimeSpan(0,0,5),
-                    Timeout=new TimeSpan(0,0,5)
+                    Interval = new TimeSpan(0, 0, 5),
+                    Timeout = new TimeSpan(0, 0, 5)
                 }
             };
             ConsulHelper.Registor(consulRegist);
