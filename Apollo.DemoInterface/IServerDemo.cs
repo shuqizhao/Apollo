@@ -8,6 +8,10 @@ namespace Apollo.DemoInterface
     {
         string Hello(string input);
 
+        string Hello1();
+
         Person GetPersonById(int id, bool isAdmin);
+
+        void SavePerson(Person person, bool isAdmin);
     }
 }

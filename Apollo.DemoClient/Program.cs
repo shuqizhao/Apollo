@@ -20,6 +20,13 @@ namespace Apollo.DemoClient
                     System.Console.WriteLine(person.Name);
 
                 }
+
+                MicroServiceFactory<IServerDemo>.Instance.SavePerson(new Person { Id = 125, Name = "shuqizhao" }, false);
+
+                var hello = MicroServiceFactory<IServerDemo>.Instance.Hello1();
+
+                System.Console.WriteLine(hello);
+
                 Thread.Sleep(1000);
             }
         }

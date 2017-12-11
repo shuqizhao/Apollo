@@ -31,6 +31,9 @@ namespace Apollo
                 request.Data = jsonInput;
                 var response = client.Call(request);
                 channel.ShutdownAsync().Wait();
+                if(targetMethod.ReturnType == typeof(void)){
+                    return "";
+                }
                 var result = JsonHelper.DeserializeJsonToObject(response.Data, targetMethod.ReturnType);
                 return result;
             }

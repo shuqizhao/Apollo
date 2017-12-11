@@ -24,6 +24,9 @@ namespace Apollo.Console
                     System.Console.WriteLine(person.Name);
 
                 }
+
+                MicroServiceFactory<IServerDemo>.Instance.SavePerson(new Person{Id=125,Name="shuqizhao"}, false);
+
                 Thread.Sleep(1000);
             }
         }

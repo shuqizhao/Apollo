@@ -18,5 +18,15 @@ namespace Apollo.Console
 
             return new Person { Id = 1, Name = "xyz", Sex = "F" };
         }
+
+        public void SavePerson(Person person, bool isAdmin)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Hello1()
+        {
+            return "Hello Word";
+        }
     }
 }
