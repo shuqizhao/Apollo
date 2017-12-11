@@ -13,6 +13,9 @@ namespace Apollo.DemoClient
             {
                 var restul = MicroServiceFactory<IServerDemo>.Instance.Hello("12");
                 System.Console.WriteLine(restul);
+
+                var person = MicroServiceFactory<IServerDemo>.Instance.GetPersonById(1, true);
+                System.Console.WriteLine(person.Name);
                 Thread.Sleep(1000);
             }
         }
