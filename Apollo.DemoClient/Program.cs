@@ -11,7 +11,7 @@ namespace Apollo.DemoClient
             Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", "127.0.0.1:8500");
             while (true)
             {
-                var restul = MicroServiceFactory<IServerDemo>.Instance.Hello("12");
+                var restul = MicroServiceFactory<IServerDemo>.Instance.Hello("Hello_string");
                 System.Console.WriteLine(restul);
 
                 var person = MicroServiceFactory<IServerDemo>.Instance.GetPersonById(1, true);
