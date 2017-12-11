@@ -23,7 +23,7 @@ namespace Apollo.DemoClient
 
                 MicroServiceFactory<IServerDemo>.Instance.SavePerson(new Person { Id = 125, Name = "shuqizhao" }, false);
 
-                var hello = MicroServiceFactory<IServerDemo>.Instance.Hello1();
+                var hello = MicroServiceFactory<IServerDemo>.Instance.Hello();
 
                 System.Console.WriteLine(hello);
 
