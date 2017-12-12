@@ -21,7 +21,7 @@ namespace Apollo.Console
 
         public void SavePerson(Person person, bool isAdmin)
         {
-            throw new NotImplementedException();
+            
         }
 
         public string Hello()

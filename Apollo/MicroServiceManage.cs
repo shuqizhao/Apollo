@@ -101,7 +101,7 @@ namespace Apollo
             }
         }
 
-        public static int GetPort()
+        public static int GetPort(string name = "")
         {
             var port = 0;
             var end = false;
@@ -109,8 +109,20 @@ namespace Apollo
             {
                 try
                 {
-                    Random ran = new Random();
-                    port = ran.Next(2000, 4000);
+                    if (string.IsNullOrWhiteSpace(name))
+                    {
+                        Random ran = new Random();
+                        port = ran.Next(2000, 4000);
+                    }
+                    else
+                    {
+                        var md5Str = Md5Helper.StrToMD5(name);
+                        var a = (short)(md5Str[0]);
+                        var b = (short)(md5Str[md5Str.Length - 1]);
+                        port = int.Parse(a + "" + b);
+                        name = "";
+                    }
+
 
                     string host = "127.0.0.1";
                     IPAddress ip = IPAddress.Parse(host);
@@ -135,7 +147,7 @@ namespace Apollo
 
         private static void BuildService(string name, MicroServiceAttribute microServiceAttribute)
         {
-            var port = GetPort();
+            var port = GetPort(name);
             var ip = GetIpAddress();
             Server server = new Server
             {
@@ -150,6 +162,7 @@ namespace Apollo
                 Name = name,
                 Port = port,
                 Address = ip,
+                Tags = new string[] { Environment.MachineName },
                 Check = new AgentServiceCheck
                 {
                     TCP = GetIpAddress() + ":" + ConsulHelper.HealthPort,
