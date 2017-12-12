@@ -17,6 +17,12 @@ namespace Apollo.DemoWebApi.Controllers
             return new string[] { "value1", "value2" };
         }
 
+        [HttpGet("hello")]
+        public Person Hello()
+        {
+            return new Person{Name="Person "};
+        }
+
         // GET api/values/5
         [HttpGet("{id}")]
         public string Get(int id)

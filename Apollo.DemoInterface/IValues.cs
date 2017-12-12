@@ -8,5 +8,7 @@ namespace Apollo.DemoInterface
     public interface IValues
     {
        IEnumerable<string> Get();
+
+       Person Hello();
     }
 }
