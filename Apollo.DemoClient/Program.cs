@@ -14,18 +14,24 @@ namespace Apollo.DemoClient
                 var restul = MicroServiceFactory<IServerDemo>.Instance.Hello("Hello_string");
                 System.Console.WriteLine(restul);
 
-                var person = MicroServiceFactory<IServerDemo>.Instance.GetPersonById(1, true);
-                if (person != null)
-                {
-                    System.Console.WriteLine(person.Name);
+                // var person = MicroServiceFactory<IServerDemo>.Instance.GetPersonById(1, true);
+                // if (person != null)
+                // {
+                //     System.Console.WriteLine(person.Name);
 
+                // }
+
+                // MicroServiceFactory<IServerDemo>.Instance.SavePerson(new Person { Id = 125, Name = "shuqizhao" }, false);
+
+                // var hello = MicroServiceFactory<IServerDemo>.Instance.Hello();
+
+                // System.Console.WriteLine(hello);
+
+                var  ass = MicroServiceFactory<IValues>.Instance.Get();
+
+                foreach(var item in ass){
+                    System.Console.WriteLine(item);
                 }
-
-                MicroServiceFactory<IServerDemo>.Instance.SavePerson(new Person { Id = 125, Name = "shuqizhao" }, false);
-
-                var hello = MicroServiceFactory<IServerDemo>.Instance.Hello();
-
-                System.Console.WriteLine(hello);
 
                 Thread.Sleep(1000);
             }

@@ -66,13 +66,18 @@ namespace Apollo
                 var ifs = type.GetInterfaces();
                 foreach (var ifItem in ifs)
                 {
-                    var microServiceAttribute = ifItem.GetCustomAttributes().First(x => x.GetType() == typeof(MicroServiceAttribute));
-                    if (microServiceAttribute != null)
+                    var attributes = ifItem.GetCustomAttributes();
+                    if (attributes.Any())
                     {
-                        BuildService(ifItem.FullName, (MicroServiceAttribute)microServiceAttribute);
-                        AddServiceType(ifItem.FullName, type);
-                        AddMethodTypes(ifItem);
+                        var microServiceAttribute = attributes.First(x => x.GetType() == typeof(MicroServiceAttribute));
+                        if (microServiceAttribute != null)
+                        {
+                            BuildService(ifItem.FullName, (MicroServiceAttribute)microServiceAttribute);
+                            AddServiceType(ifItem.FullName, type);
+                            AddMethodTypes(ifItem);
+                        }
                     }
+
                 }
             }
         }
