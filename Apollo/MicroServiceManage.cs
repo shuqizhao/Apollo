@@ -44,6 +44,10 @@ namespace Apollo
 
         public static MethodInfo GetMethodType(string key)
         {
+            if (!MethodTypes.Keys.Contains(key))
+            {
+                throw new Exception("Can't found method " + key);
+            }
             return MethodTypes[key];
         }
 
