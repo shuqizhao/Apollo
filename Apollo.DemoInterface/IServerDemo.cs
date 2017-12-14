@@ -3,9 +3,10 @@ using Apollo;
 
 namespace Apollo.DemoInterface
 {
-    [MicroService]
+    [MicroService(Name = "MyApollo", Port = 8081)]
     public interface IServerDemo
     {
+        [MicroServiceMethod(Name = "helloDaiIput")]
         string Hello(string input);
 
         string Hello();

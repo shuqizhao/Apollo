@@ -13,11 +13,10 @@ namespace Apollo
         {
             try
             {
-                var splits = request.ServiceName.Split('$');
-                var typeName = splits[0];
-                var methodName = splits[1];
-                var type = MicroServiceManage.GetServiceType(typeName);
-                var methodType = MicroServiceManage.GetMethodType(methodName);
+                var methodType = MicroServiceManage.GetMethodType(request.ServiceName);
+                
+                var serverType = MicroServiceManage.GetServiceTypeByMethodKey(request.ServiceName);
+
                 var parameters = methodType.GetParameters();
                 var values = request.Data.Split('兲');
                 var args = new List<object>();
@@ -29,7 +28,7 @@ namespace Apollo
                     args.Add(value);
                     i++;
                 }
-                var instance = Activator.CreateInstance(type);
+                var instance = Activator.CreateInstance(serverType);
                 //var args = JsonHelper.DeserializeJsonToObject<object[]>(request.Data);
                 var result = methodType.Invoke(instance, args.ToArray());
                 var resultJson = JsonConvert.SerializeObject(result);

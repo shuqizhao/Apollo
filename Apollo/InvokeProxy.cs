@@ -17,28 +17,13 @@ namespace Apollo
         {
             try
             {
-                var service = ConsulHelper.GetServer(type.FullName);
-                var channel = new Channel(service.Address + ":" + service.Port, ChannelCredentials.Insecure);
-                //System.Console.WriteLine(service.Address + ":" + service.Port);
-                var client = new ApolloService.ApolloServiceClient(channel);
-                var request = new Request();
+                var serviceKey = MicroServiceManage.BuildServiceKey(type);
+                var methodKey = MicroServiceManage.BuildMethodKey(serviceKey, targetMethod);
 
-                var key = type.FullName + "_" + targetMethod.Name;
-                foreach (var parameter in targetMethod.GetParameters())
-                {
-                    key += "-" + parameter.ParameterType.FullName;
-                }
+                var response = MicroServiceManage.Call(serviceKey, methodKey, args);
 
-                request.ServiceName = type.FullName + "$" + key;
-                var jsonInput = "";
-                foreach (var arg in args)
+                if (targetMethod.ReturnType == typeof(void))
                 {
-                    jsonInput += JsonConvert.SerializeObject(arg) + "兲";
-                }
-                request.Data = jsonInput;
-                var response = client.Call(request);
-                channel.ShutdownAsync().Wait();
-                if(targetMethod.ReturnType == typeof(void)){
                     return "";
                 }
                 var result = JsonHelper.DeserializeJsonToObject(response.Data, targetMethod.ReturnType);

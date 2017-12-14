@@ -6,5 +6,7 @@ namespace Apollo
     public class MicroServiceAttribute : Attribute
     {
         public int Port { get; set; }
+
+        public string Name { get; set; }
     }
 }
