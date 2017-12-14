@@ -51,9 +51,14 @@ namespace Apollo
                 {
                     try
                     {
-                        foreach (var agentService in AgentServices)
+                        var services =ConsulClientInstance.Agent.Services();
+                        services.Wait();
+                        var agentService1=services.GetAwaiter().GetResult().Response;
+                        
+                        //foreach (var agentService in AgentServices)
+                        foreach (var agentService in agentService1.Values)
                         {
-                            var checks = ConsulClientInstance.Health.Checks(agentService.Name);
+                            var checks = ConsulClientInstance.Health.Checks(agentService.Service);
                             checks.Wait();
                             var dicChecks = checks.GetAwaiter().GetResult().Response;
                             var unHealthChecks = dicChecks.Where(x => x.Status.Status != "passing").ToList();

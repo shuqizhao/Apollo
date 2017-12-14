@@ -17,11 +17,11 @@ namespace Apollo
 
         static MicroServiceManage()
         {
+            SelfConstruction();
         }
 
         public static void Run()
         {
-            SelfConstruction();
         }
 
         public static T Call<T>(string name, params object[] parameters) where T : class, new()
