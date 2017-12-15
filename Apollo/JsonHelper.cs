@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace Apollo{
     public class JsonHelper{
         
-        public static T DeserializeJsonToObject<T>(string json) where T : class,new()
+        public static T DeserializeJsonToObject<T>(string json) where T : class
         {
             var serializer = new JsonSerializer();
             var sr = new StringReader(json);

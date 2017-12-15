@@ -24,15 +24,15 @@ namespace Apollo
         {
         }
 
-        public static T Call<T>(string name, params object[] parameters) where T : class, new()
+        public static T Call<T>(string name, params object[] parameters) where T : class
         {
             try
             {
-                if (!name.Contains("."))
+                if (!name.Contains("_"))
                 {
-                    throw new Exception("Method name must contains .");
+                    throw new Exception("Method name must contains _");
                 }
-                var index = name.LastIndexOf('.');
+                var index = name.LastIndexOf('_');
                 var serviceKey = name.Remove(index);
                 var methodKey = name;
 
@@ -56,11 +56,11 @@ namespace Apollo
         {
             try
             {
-                if (!name.Contains("."))
+                if (!name.Contains("_"))
                 {
-                    throw new Exception("Method name must contains .");
+                    throw new Exception("Method name must contains _");
                 }
-                var index = name.LastIndexOf('.');
+                var index = name.LastIndexOf('_');
                 var serviceKey = name.Remove(index);
                 var methodKey = name;
                 Call(serviceKey, methodKey, parameters);
