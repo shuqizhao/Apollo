@@ -315,7 +315,7 @@ namespace Apollo
             Server server = new Server
             {
                 Services = { ApolloService.BindService(new ApolloServiceImpl()) },
-                Ports = { new ServerPort(ip, port, ServerCredentials.Insecure) }
+                Ports = { new ServerPort("", port, ServerCredentials.Insecure) }
             };
             server.Start();
 
