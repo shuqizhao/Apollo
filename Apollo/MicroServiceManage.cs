@@ -325,7 +325,7 @@ namespace Apollo
                 Name = name,
                 Port = port,
                 Address = ip,
-                Tags = new string[] { Environment.MachineName },
+                Tags = new string[] { Environment.MachineName,".net core" },
                 Check = new AgentServiceCheck
                 {
                     TCP = GetIpAddress() + ":" + ConsulHelper.HealthPort,
