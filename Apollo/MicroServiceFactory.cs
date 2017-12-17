@@ -20,7 +20,13 @@ namespace Apollo
                     {
                         if (_instance == null)
                         {
+#if NETSTANDARD2_0
                             _instance = DispatchProxy.Create<T, InvokeProxy<T>>();
+#endif
+#if NET45
+                             var proxy = new InvokeProxy<T>();
+                            _instance = (T)proxy.GetTransparentProxy();
+#endif
                             return _instance;
                         }
                         else

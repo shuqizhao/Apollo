@@ -9,7 +9,7 @@ namespace Apollo.DemoService
         public string Hello(string input)
         {
             System.Console.WriteLine("Hello you input is " + input);
-            return "I get it，乱码？";
+            return "hello word from c#";
         }
 
         public Person GetPersonById(int id, bool isAdmin)
