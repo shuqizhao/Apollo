@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace Apollo
 {
-    public class MicroServiceManage
+    internal class MicroServiceManage
     {
         private MicroServiceManage() { }
 
