@@ -16,7 +16,7 @@ namespace Apollo.DemoWebApi
         {
             Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", "127.0.0.1:8500");
 
-            MicroServiceManage.Run();
+            MicroServiceApplication.Run();
             
             BuildWebHost(args).Run();
         }

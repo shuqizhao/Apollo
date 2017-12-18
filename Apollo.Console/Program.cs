@@ -11,21 +11,21 @@ namespace Apollo.Console
         {
             Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", "127.0.0.1:8500");
 
-            MicroServiceManage.Run();
+            MicroServiceApplication.Run();
 
             while (true)
             {
-                var restul = MicroServiceFactory<IServerDemo>.Instance.Hello("12");
-                System.Console.WriteLine(restul);
+                // var restul = MicroServiceFactory<IServerDemo>.Instance.Hello("12");
+                // System.Console.WriteLine(restul);
 
-                var person = MicroServiceFactory<IServerDemo>.Instance.GetPersonById(1, true);
-                if (person != null)
-                {
-                    System.Console.WriteLine(person.Name);
+                // var person = MicroServiceFactory<IServerDemo>.Instance.GetPersonById(1, true);
+                // if (person != null)
+                // {
+                //     System.Console.WriteLine(person.Name);
 
-                }
+                // }
 
-                MicroServiceFactory<IServerDemo>.Instance.SavePerson(new Person{Id=125,Name="shuqizhao"}, false);
+                // MicroServiceFactory<IServerDemo>.Instance.SavePerson(new Person{Id=125,Name="shuqizhao"}, false);
 
                 Thread.Sleep(1000);
             }

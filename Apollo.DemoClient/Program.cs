@@ -27,9 +27,9 @@ namespace Apollo.DemoClient
 
                 // System.Console.WriteLine(hello);
 
-                var person = MicroServiceFactory<IValues>.Instance.Hello();
+                // var person = MicroServiceFactory<IValues>.Instance.Hello();
 
-                System.Console.WriteLine(person.Name);
+                // System.Console.WriteLine(person.Name);
                 Thread.Sleep(1000);
             }
         }
