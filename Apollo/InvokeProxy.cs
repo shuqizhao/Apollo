@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Threading;
 using Grpc.Core;
 using Newtonsoft.Json;
 
@@ -21,25 +22,36 @@ namespace Apollo
 
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
-            try
+            object result = null;
+            var needTry = false;
+            var tryCount = 0;
+            do
             {
-                var serviceKey = MicroServiceManage.BuildServiceKey(type);
-                var methodKey = MicroServiceManage.BuildMethodKey(serviceKey, targetMethod);
-
-                var response = MicroServiceManage.Call(serviceKey, methodKey, args);
-
-                if (targetMethod.ReturnType == typeof(void))
+                try
                 {
-                    return "";
+                    var serviceKey = MicroServiceManage.BuildServiceKey(type);
+                    var methodKey = MicroServiceManage.BuildMethodKey(serviceKey, targetMethod);
+
+                    var response = MicroServiceManage.Call(serviceKey, methodKey, args);
+
+                    if (targetMethod.ReturnType == typeof(void))
+                    {
+                        return "";
+                    }
+                    result = JsonHelper.DeserializeJsonToObject(response.Data, targetMethod.ReturnType);
+                    needTry = false;
                 }
-                var result = JsonHelper.DeserializeJsonToObject(response.Data, targetMethod.ReturnType);
-                return result;
+                catch (System.Exception ex)
+                {
+                    System.Console.WriteLine(ex);
+                    needTry = true;
+                }
+                tryCount++;
+                Thread.Sleep(5000);
             }
-            catch (System.Exception ex)
-            {
-                System.Console.WriteLine(ex);
-            }
-            return null;
+            while (needTry && tryCount < 3);
+
+            return result;
         }
     }
 #endif
@@ -59,18 +71,35 @@ namespace Apollo
 
         public override IMessage Invoke(IMessage msg)
          {
-            IMethodCallMessage callMessage = (IMethodCallMessage)msg;
-            var targetMethod = (MethodInfo)callMessage.MethodBase;
-            var serviceKey = MicroServiceManage.BuildServiceKey(type);
-            var methodKey = MicroServiceManage.BuildMethodKey(serviceKey, targetMethod);
-
-            var response = MicroServiceManage.Call(serviceKey, methodKey, callMessage.Args);
-
-            var result = JsonHelper.DeserializeJsonToObject(response.Data, targetMethod.ReturnType);
-            if (targetMethod.ReturnType == typeof(void))
+            object result = null;
+            var needTry = false;
+            var tryCount = 0;
+            do
             {
-                result = "";
+                try
+                {
+                    IMethodCallMessage callMessage = (IMethodCallMessage)msg;
+                    var targetMethod = (MethodInfo)callMessage.MethodBase;
+                    var serviceKey = MicroServiceManage.BuildServiceKey(type);
+                    var methodKey = MicroServiceManage.BuildMethodKey(serviceKey, targetMethod);
+
+                    var response = MicroServiceManage.Call(serviceKey, methodKey, callMessage.Args);
+
+                    result = JsonHelper.DeserializeJsonToObject(response.Data, targetMethod.ReturnType);
+                    if (targetMethod.ReturnType == typeof(void))
+                    {
+                        result = "";
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    System.Console.WriteLine(ex);
+                    needTry = true;
+                }
+                tryCount++;
+                Thread.Sleep(5000);
             }
+            while (needTry&&tryCount<3);
             ReturnMessage message = new ReturnMessage(result,null,0,null,(IMethodCallMessage)msg);
             return (IMessage)message;
          }
