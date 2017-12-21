@@ -38,13 +38,24 @@ namespace Apollo
                     {
                         return "";
                     }
-                    result = JsonHelper.DeserializeJsonToObject(response.Data, targetMethod.ReturnType);
+                    if (response.Code == "200")
+                    {
+                        result = JsonHelper.DeserializeJsonToObject(response.Data, targetMethod.ReturnType);
+                    }
+                    else if (response.Code == "500")
+                    {
+                        throw new Exception(response.Message);
+                    }
                     needTry = false;
                 }
                 catch (System.Exception ex)
                 {
                     System.Console.WriteLine(ex);
                     needTry = true;
+                    if (tryCount == 3)
+                    {
+                        throw ex;
+                    }
                 }
                 tryCount++;
                 Thread.Sleep(5000);
@@ -84,8 +95,13 @@ namespace Apollo
                     var methodKey = MicroServiceManage.BuildMethodKey(serviceKey, targetMethod);
 
                     var response = MicroServiceManage.Call(serviceKey, methodKey, callMessage.Args);
-
-                    result = JsonHelper.DeserializeJsonToObject(response.Data, targetMethod.ReturnType);
+                    if (response.Code == "200")
+                    {
+                        result = JsonHelper.DeserializeJsonToObject(response.Data, targetMethod.ReturnType);
+                    }
+                    else if(response.Code == "500"){
+                        throw new Exception(response.Message);
+                    }
                     if (targetMethod.ReturnType == typeof(void))
                     {
                         result = "";
@@ -95,6 +111,9 @@ namespace Apollo
                 {
                     System.Console.WriteLine(ex);
                     needTry = true;
+                    if(tryCount == 3){
+                        throw ex;
+                    }
                 }
                 tryCount++;
                 Thread.Sleep(5000);
